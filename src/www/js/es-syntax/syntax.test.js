@@ -5,22 +5,23 @@ describe('ES2015 syntax', () => {
        * Assume the codebase uses `let` declarations only for variables
        * that are reassigned. Use `const` otherwise.
        */
-      var a = 4
-      var b = [1, 2, 3]
+      let a = 4
+      const b = [1, 2, 3]
 
       if (b.length < 4) b.push(a)
       expect(b).toEqual([1, 2, 3, 4])
 
-      var a = 2
-      var c = [1, a, 3]
+      a = 2
+      const c = [1, a, 3]
       expect(c).toEqual([1, 2, 3])
+      //Yay!
     })
   })
 
   describe('loops', () => {
     it('rewrite the for loop to use a let variable', () => {
       const nums = []
-      for (var i = 0; i < 3; i++) {
+      for (let i = 0; i < 3; i++) {
         nums.push(i)
       }
       expect(nums).toEqual([0, 1, 2])
@@ -31,44 +32,39 @@ describe('ES2015 syntax', () => {
     it('rewrite using object function shorthand', () => {
       const person = {
         name: 'Andrew',
-        getName: function() { return this.name }
+        getName() { return this.name }
       }
       expect(person.getName()).toEqual('Andrew')
     })
 
     it('rewrite using object property shorthand', () => {
       const name = 'Andrew'
-      const person = { name: name }
+      const person = { name }
       expect(person.name).toEqual('Andrew')
     })
   })
 
   describe('functions', () => {
     it('rewrite the function declaration with arrow syntax', () => {
-      expect(foo()).toEqual('foo')
+      const foo = () => 'foo';
 
-      function foo() {
-        return 'foo'
-      }
+      expect(foo()).toEqual('foo')
     })
 
     it('rewrite the function declaration, and use implicit return for anonymous function', () => {
-      expect(addOneToValues([1, 2, 3])).toEqual([2, 3, 4])
-      expect(() => addOneToValues([])).toThrow('Values required')
-
-      function addOneToValues(xs) {
+      const addOneToValues = ((xs) => {
         if (xs.length < 1) throw new Error('Values required')
         // HINT: you can use an implicit return arrow function by omitting the curly brackets
-        return xs.map(function (x) {
-          return x + 1
-        })
-      }
+        return xs.map((x) => x + 1)
+      });
+
+      expect(addOneToValues([1, 2, 3])).toEqual([2, 3, 4])
+      expect(() => addOneToValues([])).toThrow('Values required')
     })
 
     it('rewrite the logic in the function to use default parameters', () => {
-      const getIndexOfFoo = (str) => {
-        const strDefault = str || ''
-        return strDefault.indexOf('foo')
+      const getIndexOfFoo = (str = '') => {
+        return str.indexOf('foo')
       }
 
       expect(getIndexOfFoo('hello foo bar')).toEqual(6)
@@ -78,15 +74,15 @@ describe('ES2015 syntax', () => {
 
   describe('array spread and destructuring', () => {
     it('rewrite using array destructuring', () => {
-      const favoriteThings = ['tea', 'chocolate', 'bicycles', 'mangoes']
-      const tea = favoriteThings[0]
-      const chocolate = favoriteThings[1]
-      const others = favoriteThings.slice(2)
+      const [tea, chocolate, ...favoriteThings] = ['tea', 'chocolate', 'bicycles', 'mangoes']
+      // const tea = favoriteThings[0]
+      // const chocolate = favoriteThings[1]
+      const others = [...favoriteThings];
       expect(tea).toEqual('tea')
       expect(chocolate).toEqual('chocolate')
       expect(others).toEqual(['bicycles', 'mangoes'])
     })
-
+    //TODO finish from here
     it('rewrite to use rest parameters', () => {
       const addNToNumbers = function () {
         const n = arguments[0]
