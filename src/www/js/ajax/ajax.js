@@ -12,9 +12,10 @@
  * The `fetch' API: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
  */
 export const Ajax = (() => {
-  const raw = async (url, method, data) => {
-    // Implement this function.
-  }
+  const raw = async (url, method, data) => (await fetch(url, {
+    method,
+    body: JSON.stringify(data),
+  })).json()
 
   // HTTP GET (Fetch resource).
   const get = (url) => {

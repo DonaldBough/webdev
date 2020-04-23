@@ -10,7 +10,6 @@
  * returning a Promise that resolves to the deserialized JSON data.
  */
 export const getArtists = (id) => {
-
-  // Your code goes here.
-
+	if (id) {return fetch(`/api/artists/${id}`).then((data) => data.json())}
+	return fetch(`/api/artists`).then((data) => data.json())
 }

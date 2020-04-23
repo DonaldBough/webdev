@@ -105,8 +105,19 @@ describe('Array higher-order functions', () => {
         }
         return groupings
       }
+      names.reduce()
+
       const names = ['Alice', 'Bob', 'Tiff', 'Bruce', 'Alice']
       expect(groupByName(names)).toEqual({ Alice: 2, Bob: 1, Tiff: 1, Bruce: 1 })
     })
   })
 })
+
+
+
+
+
+
+
+
+
