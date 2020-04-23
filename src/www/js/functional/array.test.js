@@ -9,9 +9,7 @@ describe('Array higher-order functions', () => {
     it('rewrite the for loop with forEach', () => {
       const mockFn = jest.fn()
 
-      for (let i = 0; i < users.length; i++) {
-        mockFn(users[i])
-      }
+      users.forEach(user => mockFn(user))
 
       expect(mockFn.mock.calls.length).toEqual(3)
       expect(mockFn.mock.calls).toEqual([
@@ -24,27 +22,14 @@ describe('Array higher-order functions', () => {
 
   describe('#filter', () => {
     it('rewrite the filter operation without a for loop', () => {
-      const usersWithFavoriteColorBlue = []
-
-      for (let i = 0; i < users.length; i++) {
-        const user = users[i]
-        if (user.favoriteColor === 'blue') {
-          usersWithFavoriteColorBlue.push(user)
-        }
-      }
-
+      const usersWithFavoriteColorBlue = users.filter(user => user.favoriteColor === 'blue')
+      
       expect(usersWithFavoriteColorBlue).toEqual([users[0]])
     })
 
     it('write a function #reject that does the opposite of #filter and uses that method', () => {
       const reject = (pred, array) => {
-        const result = []
-        for (let i = 0; i < array.length; i++) {
-          if (!pred(array[i])) {
-            result.push(array[i])
-          }
-        }
-        return result
+        return array.filter(element => !pred(element))
       }
 
       const usersWithoutFavoriteColorblue = reject(user => user.favoriteColor === 'blue', users)
@@ -55,9 +40,12 @@ describe('Array higher-order functions', () => {
   describe('#every', () => {
     it('implement the #every method', () => {
       // === Uncomment me and implement ===
-      // Array.prototype.every = function(pred) {
-      //   console.log(this) // access the array with `this`
-      // }
+      Array.prototype.every = function(pred) {
+        let res = true;
+
+        this.map(element => {if (!pred(element)) {res = false}})
+        return res;
+      }
       expect([1, 2, 3].every(x => x > 0)).toEqual(true)
       expect([1, 2, 3].every(x => x > 2)).toEqual(false)
     })
@@ -94,13 +82,7 @@ describe('Array higher-order functions', () => {
 
   describe('#reduce', () => {
     it('rewrite using reduce', () => {
-      const doubleSum = (vals) => {
-        let result = 0
-        for (let i = 0; i < vals.length; i++) {
-          result += vals[i] * 2
-        }
-        return result
-      }
+      const doubleSum = (vals) => vals.reduce((accum, val) => accum + (val * 2), 0)
 
       expect(doubleSum([1, 2, 3])).toEqual(2 + 4 + 6)
     })
@@ -108,13 +90,7 @@ describe('Array higher-order functions', () => {
     it('rewrite #flatten using reduce', () => {
       // TIP: Use Array#concat to join two arrays together immutably
       const flatten = (tuples) => {
-        const result = []
-        for (let i = 0; i < tuples.length; i++) {
-          for (let j = 0; j < tuples[i].length; j++) {
-            result.push(tuples[i][j])
-          }
-        }
-        return result
+        return tuples.reduce((result,array) => result.concat(array))
       }
 
       expect(flatten([[0, 1], [2, 3, 4], [5], []])).toEqual([0, 1, 2, 3, 4, 5])
